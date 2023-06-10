@@ -7,7 +7,7 @@ class BotterFly_AiArtPage_Module extends FLBuilderModule {
 
     public function __construct() {
         parent::__construct( array(
-            'name' => __( 'BotterFly Menu', 'botterfly-custom-bb-modules' ),
+            'name' => __( 'AI Art Page', 'botterfly-custom-bb-modules' ),
             'description' => __( 'BotterFly Module', 'botterfly-custom-bb-modules' ),
             'category' => __( 'OpenAI Modules', 'botterfly-custom-bb-modules' ),
             'dir' => botterfly_custom_bb_modules_PATH . 'modules/ai-art-page/',
@@ -15,6 +15,7 @@ class BotterFly_AiArtPage_Module extends FLBuilderModule {
             'partial_refresh' => true,
         ) );
         $this->add_css( 'bt-css', '//stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' );
+        $this->add_css( 'boxicons-css', '//unpkg.com/boxicons@2.0.9/css/boxicons.min.css' );
         $this->add_js( 'bt-js', '//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js', array( 'jquery' ), '4.5.2', true );
     }
 

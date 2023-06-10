@@ -15,6 +15,7 @@ class BotterFly_Menu_Module extends FLBuilderModule {
             'partial_refresh' => true,
         ) );
         $this->add_css( 'bt-css', '//stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' );
+        $this->add_css( 'boxicons-css', '//unpkg.com/boxicons@2.0.9/css/boxicons.min.css' );
         $this->add_js( 'bt-js', '//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js', array( 'jquery' ), '4.5.2', true );
     }
 
