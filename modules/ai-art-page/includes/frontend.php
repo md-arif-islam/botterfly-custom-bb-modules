@@ -13,44 +13,8 @@
                 <button class="r-art">Request art</button>
             </div>
             <div class="form-section">
-                <div class="utm-box">
-                    <form class="form">
-                        <div class="form-group">
-                            <label for="image-upload">Upload the image here</label>
-                            <div class="upload-container">
-                                <input type="file" id="image-upload" accept="image/*" style="display: none;"
-                                       onchange="handleFileSelect(event)">
-                                <label for="image-upload" class="upload-label" ondragover="handleDragOver(event)"
-                                       ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-                                    <span id="uploaded-text"><i class="fa fa-upload"></i>Click or drop image</span>
-                                    <img id="preview-image" src="#" alt="Preview" style="display: none;">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="wad">Write a detailed description with instructions for the
-                                modifications</label>
-                            <textarea class="form-control" id="wad" rows="3"
-                                      placeholder="Enter key points and words you want to be included"></textarea>
-                            <small>Maximum 80 words</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="aoe">No. of variations</label>
-                            <select class="form-control" id="aoe">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="gs-btn">Modify Now</button>
-                        </div>
-                    </form>
-                </div>
                 <div class="r-art-box">
-                    <form class="form">
+                    <form class="form" id="ai-content-form">
                         <div class="form-group">
                             <label for="wad">Write a detailed descriptions with instructions for the
                                 modifications</label>
@@ -59,8 +23,8 @@
                             <small>Maximum 80 words</small>
                         </div>
                         <div class="form-group">
-                            <label for="aoe">Image resolution</label>
-                            <select class="form-control" id="aoe">
+                            <label for="aoe-resolution">Image resolution</label>
+                            <select class="form-control" id="aoe-resolution">
                                 <option>512x512</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -69,8 +33,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="aoe">No. of samples</label>
-                            <select class="form-control" id="aoe">
+                            <label for="aoe-samples">No. of samples</label>
+                            <select class="form-control" id="aoe-samples">
                                 <option>2</option>
                                 <option>3</option>
                                 <option>4</option>
@@ -84,7 +48,8 @@
                             <small>Maximum 80 words</small>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="gs-btn">Generate AI Content</button>
+                            <button type="button" class="gs-btn" id="generate-ai-content-btn">Generate AI Content
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -124,8 +89,9 @@
 </div>
 
 <script>
-    jQuery(document).ready(function () {
+    import {cleanFilterUrl} from "../../../../woocommerce/packages/woocommerce-blocks/assets/js/blocks/active-filters/utils";
 
+    jQuery(document).ready(function () {
         let r_art = jQuery(".r-art");
         let utm = jQuery(".utm");
         let slider = jQuery(".slider");
@@ -136,14 +102,12 @@
             formSection.addClass("form-section-move");
         });
 
-
         utm.on("click", function () {
             slider.removeClass("moveslider");
             formSection.removeClass("form-section-move");
         });
 
         let activeIndex;
-
 
         jQuery(".upload-label").on("dragover", function (event) {
             event.preventDefault();
@@ -159,30 +123,64 @@
             event.preventDefault();
             jQuery(this).removeClass("drag-over");
 
-            var file = event.originalEvent.dataTransfer.files[0];
+            let file = event.originalEvent.dataTransfer.files[0];
             displayPreview(file);
         });
 
         jQuery("#image-upload").on("change", function (event) {
-            var file = event.target.files[0];
+            let file = event.target.files[0];
             displayPreview(file);
         });
 
         function displayPreview(file) {
-            var reader = new FileReader();
+            let reader = new FileReader();
 
             reader.onload = function (e) {
-                var previewImage = jQuery("#preview-image");
+                let previewImage = jQuery("#preview-image");
                 previewImage.attr("src", e.target.result);
                 previewImage.css("display", "block");
 
-                var uploadedText = jQuery("#uploaded-text");
+                let uploadedText = jQuery("#uploaded-text");
                 uploadedText.text(file.name);
                 uploadedText.addClass("uploaded");
             };
 
             reader.readAsDataURL(file);
         }
+
+
+        jQuery('#generate-ai-content-btn').click(function () {
+
+
+            const wadValue = document.querySelector('#wad');
+            const aoeResolutionValue = document.querySelector('#aoe-resolution');
+            const aoeSamplesValue = document.querySelector('#aoe-samples');
+            const woumValue = document.querySelector('#woum');
+
+            const params = new URLSearchParams({
+                wadValue: wadValue.value,
+                aoeResolutionValue: aoeResolutionValue.value,
+                aoeSamplesValue: aoeSamplesValue.value,
+                woumValue: woumValue.value,
+            });
+
+
+            // use SSE to get server Events
+            var source = new SSE("<?php echo plugin_dir_url( __DIR__ ); ?>generate-ai-content.php?" + params.toString());
+            source.addEventListener('message', function (e) {
+                if (e.data) {
+                    console.log("Okay");
+                } else {
+                    console.log("Not Okay");
+                }
+
+            })
+            source.stream()
+
+        });
+
     });
 
+
 </script>
+<script src="<?php echo plugin_dir_url( __DIR__ ); ?>js/sse.js"></script>

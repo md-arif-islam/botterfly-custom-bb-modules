@@ -13,23 +13,26 @@
             <span class="shrink-btn">
                     <i class='bx bx-chevron-left'></i>
                 </span>
-            <img src="<?php echo plugin_dir_url( __DIR__ ); ?>/img/logo.png" id="logo" class="logo" alt="">
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+    			<img src="<?php echo plugin_dir_url( __DIR__ ); ?>/img/logo.png" id="logo" class="logo" alt="">
+			</a>
+
 
         </div>
 
         <!-- Sidebar Links Section -->
         <div id="sidebar-links" class="sidebar-links">
             <ul>
-                <li>
+<!--                 <li>
                     <a href="#" class="active">
                         <div class="icon">
                             <i class='bx bx-home-alt'></i>
                         </div>
                         <span class="link hide">Dashboard</span>
                     </a>
-                </li>
+                </li> -->
                 <li>
-                    <a href="#">
+                    <a href="https://botterflyai.onlinewithyou.nl/app/ai-art/">
                         <div class="icon">
                             <i class='bx bx-cube'></i>
                         </div>
@@ -37,7 +40,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="https://botterflyai.onlinewithyou.nl/app/letter/">
                         <div class="icon">
                             <i class='bx bx-message-square-detail'></i>
                         </div>
@@ -45,21 +48,21 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="https://botterflyai.onlinewithyou.nl/app/letter-copy/">
                         <div class="icon">
                             <i class='bx bx-briefcase-alt-2'></i>
                         </div>
                         <span class="link hide">Bulk Letters</span>
                     </a>
                 </li>
-                <li>
+<!--                 <li>
                     <a href="#">
                         <div class="icon">
                             <i class='bx bx-food-menu'></i>
                         </div>
                         <span class="link hide">Templates</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
             <h4 class="hide">Letters</h4>
             <ul>
@@ -86,14 +89,22 @@
         <div class="sidebar-footer">
             <div class="admin-user tooltip-element">
                 <div class="admin-profile hide">
-                    <img src="<?php echo plugin_dir_url( __DIR__ ); ?>/img/face-1.png" alt="">
-                    <div class="admin-info">
-                        <h3>John Carter <span class="free">Free</span> </h3>
-                        <h5>johncarter@botterfly.io</h5>
-                    </div>
+<!--                    <img src="--><?php //echo plugin_dir_url( __DIR__ ); ?><!--/img/face-1.png" alt="">-->
+                    <div class="admin-info ">
+						<h3>
+							<?php
+							$current_user = wp_get_current_user();
+							$display_name = $current_user->display_name;
+							echo esc_html($display_name);
+							?>
+							<span class="free">Paid</span>
+						</h3>
+						<h5><?php echo esc_html($current_user->user_email); ?></h5>
+					</div>
+
                 </div>
-                <a href="#" class="upgrade-to-pro">
-                    Upgrade to Pro
+                <a href="/handlers/stripe-customer-portal-handler.php" target="_blank" class="upgrade-to-pro">
+                    Manage billing & invoices
                 </a>
             </div>
         </div>
