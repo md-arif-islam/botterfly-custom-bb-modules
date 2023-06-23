@@ -2,7 +2,11 @@
 /**
  * Plugin Name: BotterFly Custom Modules for Beaver Builder
  * Description: A plugin that adds extra modules to Beaver Builder.
+<<<<<<< HEAD
  * Version: 1.3
+=======
+ * Version: 1.2
+>>>>>>> 6b59724ec650233050a78c1fd30abd2433afb0e5
  * Author: Online With You & MD Arif Islam
  */
 
