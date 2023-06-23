@@ -181,4 +181,3 @@
 
 
 </script>
-<script src="<?php echo plugin_dir_url( __DIR__ ); ?>js/sse.js"></script>
