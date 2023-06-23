@@ -24,11 +24,9 @@
                         </div>
                         <div class="form-group">
                             <label for="aoe-resolution">Image resolution</label>
-<<<<<<< HEAD
+
                             <select class="form-control" id="acf-resolution">
-=======
-                            <select class="form-control" id="aoe-resolution">
->>>>>>> 6b59724ec650233050a78c1fd30abd2433afb0e5
+
                                 <option>512x512</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -38,11 +36,9 @@
                         </div>
                         <div class="form-group">
                             <label for="aoe-samples">No. of samples</label>
-<<<<<<< HEAD
+
                             <select class="form-control" id="acf-samples">
-=======
-                            <select class="form-control" id="aoe-samples">
->>>>>>> 6b59724ec650233050a78c1fd30abd2433afb0e5
+
                                 <option>2</option>
                                 <option>3</option>
                                 <option>4</option>
@@ -56,11 +52,7 @@
                             <small>Maximum 80 words</small>
                         </div>
                         <div class="text-center">
-<<<<<<< HEAD
                             <button type="submit" class="gs-btn" id="generate-ai-content-btn">Generate AI Content
-=======
-                            <button type="button" class="gs-btn" id="generate-ai-content-btn">Generate AI Content
->>>>>>> 6b59724ec650233050a78c1fd30abd2433afb0e5
                             </button>
                         </div>
                     </form>
@@ -101,7 +93,6 @@
 </div>
 
 <script>
-    import {cleanFilterUrl} from "../../../../woocommerce/packages/woocommerce-blocks/assets/js/blocks/active-filters/utils";
 
     jQuery(document).ready(function () {
         let r_art = jQuery(".r-art");
@@ -160,8 +151,7 @@
             reader.readAsDataURL(file);
         }
 
-<<<<<<< HEAD
-        // Send form data using Ajax
+
         jQuery('#ai-content-form').submit(function (event) {
             event.preventDefault(); // Prevent form from submitting normally
 
@@ -187,40 +177,6 @@
             });
         });
 
-
-=======
-
-        jQuery('#generate-ai-content-btn').click(function () {
-
-
-            const wadValue = document.querySelector('#wad');
-            const aoeResolutionValue = document.querySelector('#aoe-resolution');
-            const aoeSamplesValue = document.querySelector('#aoe-samples');
-            const woumValue = document.querySelector('#woum');
-
-            const params = new URLSearchParams({
-                wadValue: wadValue.value,
-                aoeResolutionValue: aoeResolutionValue.value,
-                aoeSamplesValue: aoeSamplesValue.value,
-                woumValue: woumValue.value,
-            });
-
-
-            // use SSE to get server Events
-            var source = new SSE("<?php echo plugin_dir_url( __DIR__ ); ?>generate-ai-content.php?" + params.toString());
-            source.addEventListener('message', function (e) {
-                if (e.data) {
-                    console.log("Okay");
-                } else {
-                    console.log("Not Okay");
-                }
-
-            })
-            source.stream()
-
-        });
-
->>>>>>> 6b59724ec650233050a78c1fd30abd2433afb0e5
     });
 
 
