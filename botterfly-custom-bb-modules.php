@@ -88,5 +88,26 @@ function botterflyai_register_cpt() {
 
 add_action( 'init', 'botterflyai_register_cpt' );
 
+function botterflyai_change_menu( $menu ) {
+
+	$art_req_count = get_transient( 'art_req_count' ) ? get_transient( 'art_req_count' ) : 0;
+	if ( $art_req_count > 0 ) {
+		$menu[4][0] = "Art Request <span class='awaiting-mod'>{$art_req_count}</span> ";
+	}
+
+	return $menu;
+}
+
+add_filter( 'add_menu_classes', 'botterflyai_change_menu' );
+
+function botterflyai_admin_scripts( $screen ) {
+	$_screen = get_current_screen();
+	if ( 'edit.php' == $screen && 'art_request' == $_screen->post_type ) {
+		delete_transient( 'art_req_count' );
+	}
+}
+
+add_action( 'admin_enqueue_scripts', 'botterflyai_admin_scripts' );
+
 
 ?>

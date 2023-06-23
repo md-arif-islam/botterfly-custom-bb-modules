@@ -12,7 +12,10 @@
                 <button class="utm">Upload to modify</button>
                 <button class="r-art">Request art</button>
             </div>
-            <div class="form-section">
+            <div id="feedback-status">
+
+            </div>
+            <div class="form-section" id="art-from">
                 <div class="r-art-box">
                     <form class="form" id="ai-content-form">
                         <div class="form-group">
@@ -172,7 +175,12 @@
                 url: 'http://botterflyai.local/wp-content/plugins/botterfly-custom-bb-modules-master/modules/ai-art-page/generate-ai-content.php',
                 data: formData,
                 success: function (response) {
-                    console.log(response);
+                    if (response == 'success') {
+                        jQuery('#art-from').hide();
+                        jQuery('#feedback-status').html('<p>Your feedback was sent successfully. Thank you for getting in touch!</p>');
+                    } else {
+                        jQuery('#feedback-status').html('<p>Sorry, an error occurred while sending your feedback. Please try again later.</p>');
+                    }
                 }
             });
         });
