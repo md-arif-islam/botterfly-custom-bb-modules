@@ -50,17 +50,17 @@
                     </form>
                 </div>
                 <div class="r-art-box">
-                    <form class="form">
+                    <form class="form" id="ai-content-form">
                         <div class="form-group">
                             <label for="wad">Write a detailed descriptions with instructions for the
                                 modifications</label>
-                            <textarea class="form-control" id="wad" rows="3"
+                            <textarea class="form-control" id="acf-wad" rows="3"
                                       placeholder="Enter key points and words you want to be included"></textarea>
                             <small>Maximum 80 words</small>
                         </div>
                         <div class="form-group">
-                            <label for="aoe">Image resolution</label>
-                            <select class="form-control" id="aoe">
+                            <label for="aoe-resolution">Image resolution</label>
+                            <select class="form-control" id="acf-resolution">
                                 <option>512x512</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -69,8 +69,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="aoe">No. of samples</label>
-                            <select class="form-control" id="aoe">
+                            <label for="aoe-samples">No. of samples</label>
+                            <select class="form-control" id="acf-samples">
                                 <option>2</option>
                                 <option>3</option>
                                 <option>4</option>
@@ -79,12 +79,13 @@
                         </div>
                         <div class="form-group">
                             <label for="woum">Add prompt</label>
-                            <input type="text" class="form-control" id="woum"
+                            <input type="text" class="form-control" id="acf-woum"
                                    placeholder="Type your prompt here...">
                             <small>Maximum 80 words</small>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="gs-btn">Generate AI Content</button>
+                            <button type="submit" class="gs-btn" id="generate-ai-content-btn">Generate AI Content
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -183,6 +184,34 @@
 
             reader.readAsDataURL(file);
         }
+
+        // Send form data using Ajax
+        jQuery('#ai-content-form').submit(function (event) {
+            event.preventDefault(); // Prevent form from submitting normally
+
+            let acfWad = jQuery('#acf-wad').val();
+            let acfResolution = jQuery('#acf-resolution').val();
+            let acfSamples = jQuery('#acf-samples').val();
+            let acfWoum = jQuery('#acf-woum').val();
+
+            let formData = {
+                acfWad: acfWad,
+                acfResolution: acfResolution,
+                acfSamples: acfSamples,
+                acfWoum: acfWoum
+            };
+
+            jQuery.ajax({
+                type: 'POST',
+                url: 'http://botterflyai.local/wp-content/plugins/botterfly-custom-bb-modules-master/modules/ai-art-page/generate-ai-content.php',
+                data: formData,
+                success: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+
+
     });
 
 </script>

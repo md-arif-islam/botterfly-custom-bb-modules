@@ -7,7 +7,7 @@ class BotterFly_TemplatesPage_Module extends FLBuilderModule {
 
     public function __construct() {
         parent::__construct( array(
-            'name' => __( 'BotterFly Menu', 'botterfly-custom-bb-modules' ),
+            'name' => __( 'Template Page', 'botterfly-custom-bb-modules' ),
             'description' => __( 'BotterFly Module', 'botterfly-custom-bb-modules' ),
             'category' => __( 'OpenAI Modules', 'botterfly-custom-bb-modules' ),
             'dir' => botterfly_custom_bb_modules_PATH . 'modules/templates-page/',

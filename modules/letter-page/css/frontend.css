@@ -9,7 +9,7 @@
 
 /* -----leter-generation  */
 .p-leter-generation {
-    height: 98vh;
+    min-height: 98vh;
     padding: 30px 15px;
     width: 25rem;
     background-color: #fff;
@@ -123,13 +123,14 @@
 .chat-section {
     display: flex;
     justify-content: center;
-    align-items: end;
+    align-items: start;
     margin: 0 auto;
 }
 
 .chat-section .content {
-    height: 90vh;
+    min-height: 95%;
     padding: 30px;
+    width: 50vw;
     background-color: #fff;
     margin: 10px;
     border-top-left-radius: 20px;
