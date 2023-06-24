@@ -1,0 +1,39 @@
+.template__card {
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.template__card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.template__card a {
+    text-decoration: none;
+}
+
+.template__card .template__card--img img {
+    width: 30px;
+    height: auto;
+}
+
+.template__card .template__card--title h1 {
+    font-family: Inter, sans-serif;
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 1.1;
+    color: #1e293b;
+    margin-top: 10px;
+}
+
+.template__card .template__card--desc p {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 140%;
+
+    color: #929697;
+}

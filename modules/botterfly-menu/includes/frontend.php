@@ -23,16 +23,8 @@
         <!-- Sidebar Links Section -->
         <div id="sidebar-links" class="sidebar-links">
             <ul>
-<!--                 <li>
-                    <a href="#" class="active">
-                        <div class="icon">
-                            <i class='bx bx-home-alt'></i>
-                        </div>
-                        <span class="link hide">Dashboard</span>
-                    </a>
-                </li> -->
                 <li>
-                    <a href="https://botterflyai.onlinewithyou.nl/app/ai-art/">
+                    <a href="<?php echo esc_url( home_url( '/app/ai-art' ) ); ?>">
                         <div class="icon">
                             <i class='bx bx-cube'></i>
                         </div>
@@ -40,7 +32,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="https://botterflyai.onlinewithyou.nl/app/letter/">
+                    <a href="<?php echo esc_url( home_url( '/app/letter' ) ); ?>">
                         <div class="icon">
                             <i class='bx bx-message-square-detail'></i>
                         </div>
@@ -48,21 +40,21 @@
                     </a>
                 </li>
                 <li>
-                    <a href="https://botterflyai.onlinewithyou.nl/app/letter-copy/">
+                    <a href="<?php echo esc_url( home_url( '/app/letter-copy' ) ); ?>">
                         <div class="icon">
                             <i class='bx bx-briefcase-alt-2'></i>
                         </div>
                         <span class="link hide">Bulk Letters</span>
                     </a>
                 </li>
-<!--                 <li>
-                    <a href="#">
+                 <li>
+                     <a href="<?php echo esc_url( home_url( '/app/template' ) ); ?>">
                         <div class="icon">
                             <i class='bx bx-food-menu'></i>
                         </div>
                         <span class="link hide">Templates</span>
                     </a>
-                </li> -->
+                </li>
             </ul>
             <h4 class="hide">Letters</h4>
             <ul>

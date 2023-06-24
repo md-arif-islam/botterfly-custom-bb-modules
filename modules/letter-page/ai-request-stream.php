@@ -42,7 +42,7 @@ if ($pgas) $prompt .= "The recipient prefers the greeting as: $pgas. \n";
 
 
 $endpoint = 'https://api.openai.com/v1/chat/completions';
-$api_key = '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';
+$api_key = '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';
 
 
 $data = array(

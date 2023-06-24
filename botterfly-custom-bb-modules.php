@@ -84,21 +84,66 @@ function botterflyai_register_cpt() {
 
 	register_post_type( "art_request", $args );
 
+
+	/**
+	 * Post Type: Templates.
+	 */
+
+	$labels = [
+		"name"          => esc_html__( "Templates", "astra-child" ),
+		"singular_name" => esc_html__( "Template", "astra-child" ),
+	];
+
+	$args = [
+		"label"                 => esc_html__( "Templates", "astra-child" ),
+		"labels"                => $labels,
+		"description"           => "",
+		"public"                => true,
+		"publicly_queryable"    => true,
+		"show_ui"               => true,
+		"show_in_rest"          => true,
+		"rest_base"             => "",
+		"rest_controller_class" => "WP_REST_Posts_Controller",
+		"rest_namespace"        => "wp/v2",
+		"has_archive"           => false,
+		"show_in_menu"          => true,
+		"show_in_nav_menus"     => true,
+		"delete_with_user"      => false,
+		"exclude_from_search"   => false,
+		"capability_type"       => "post",
+		"map_meta_cap"          => true,
+		"hierarchical"          => false,
+		"can_export"            => false,
+		"rewrite"               => [ "slug" => "template", "with_front" => true ],
+		"query_var"             => true,
+		"menu_icon"             => "dashicons-category",
+		"supports"              => [ "title", "editor", "thumbnail" ],
+		"show_in_graphql"       => false,
+	];
+
+	register_post_type( "template", $args );
+
+
 }
 
 add_action( 'init', 'botterflyai_register_cpt' );
 
 function botterflyai_change_menu( $menu ) {
-
 	$art_req_count = get_transient( 'art_req_count' ) ? get_transient( 'art_req_count' ) : 0;
+
 	if ( $art_req_count > 0 ) {
-		$menu[4][0] = "Art Request <span class='awaiting-mod'>{$art_req_count}</span> ";
+		$menu_index = array_search( 'edit.php?post_type=art_request', array_column( $menu, 2 ) );
+
+		if ( $menu_index !== false ) {
+			$menu[ $menu_index ][0] = "Art Requests <span class='awaiting-mod'>{$art_req_count}</span>";
+		}
 	}
 
 	return $menu;
 }
 
 add_filter( 'add_menu_classes', 'botterflyai_change_menu' );
+
 
 function botterflyai_admin_scripts( $screen ) {
 	$_screen = get_current_screen();

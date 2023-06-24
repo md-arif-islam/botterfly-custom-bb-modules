@@ -16,8 +16,44 @@
 
             </div>
             <div class="form-section" id="art-from">
+                <div class="utm-box">
+                    <form class="form" id="art-modify-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="amf-image-upload">Upload the image here</label>
+                            <div class="upload-container">
+                                <input type="file" id="amf-image-upload" accept="image/*" style="display: none;"
+                                       onchange="handleFileSelect(event)">
+                                <label for="amf-image-upload" class="upload-label" ondragover="handleDragOver(event)"
+                                       ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                                    <span id="uploaded-text"><i class="fa fa-upload"></i>Click or drop image</span>
+                                    <img id="preview-image" src="#" alt="Preview" style="display: none;">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="wad">Write a detailed description with instructions for the
+                                modifications</label>
+                            <textarea class="form-control" id="amf-wad" rows="3"
+                                      placeholder="Enter key points and words you want to be included"></textarea>
+                            <small>Maximum 80 words</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="amf-nof">No. of letiations</label>
+                            <select class="form-control" id="amf-nof">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="gs-btn" id="amf-btn">Modify Now</button>
+                        </div>
+                    </form>
+                </div>
                 <div class="r-art-box">
-                    <form class="form" id="ai-content-form">
+                    <form class="form" id="art-request-form">
                         <div class="form-group">
                             <label for="wad">Write a detailed descriptions with instructions for the
                                 modifications</label>
@@ -124,9 +160,7 @@
     </div>
 
 </div>
-
 <script>
-
     jQuery(document).ready(function () {
         let r_art = jQuery(".r-art");
         let utm = jQuery(".utm");
@@ -163,7 +197,7 @@
             displayPreview(file);
         });
 
-        jQuery("#image-upload").on("change", function (event) {
+        jQuery("#amf-image-upload").on("change", function (event) {
             let file = event.target.files[0];
             displayPreview(file);
         });
@@ -184,8 +218,7 @@
             reader.readAsDataURL(file);
         }
 
-
-        jQuery('#ai-content-form').submit(function (event) {
+        jQuery('#art-request-form').submit(function (event) {
             event.preventDefault(); // Prevent form from submitting normally
 
             let acfWad = jQuery('#acf-wad').val();
@@ -215,7 +248,36 @@
             });
         });
 
+        jQuery('#art-modify-form').submit(function (event) {
+            event.preventDefault(); // Prevent form from submitting normally
+
+            let formData = new FormData(); // Create a new FormData object
+
+            let amfImageFile = jQuery("#amf-image-upload")[0].files[0];
+            let amfWad = jQuery("#amf-wad").val();
+            let amfNof = jQuery("#amf-nof").val();
+
+            formData.append("amfImageFile", amfImageFile);
+            formData.append("amfWad", amfWad);
+            formData.append("amfNof", amfNof);
+
+            console.log(formData);
+
+            // AJAX request to submit form data
+            jQuery.ajax({
+                type: "POST",
+                url: "http://botterflyai.local/wp-content/plugins/botterfly-custom-bb-modules-master/modules/ai-art-page/modify-art.php",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+
     });
-
-
 </script>

@@ -19,12 +19,12 @@
                 <div class="form-group">
                     <label for="cut">Choose Your Tone</label>
                     <select class="form-control" id="cyt">
-                    	<option>Formal</option>
-						<option>Informal</option>
-						<option>Persuasive</option>
-						<option>Humorous</option>
-						<option>Serious</option>
-						<option>Friendly</option>
+                        <option>Formal</option>
+                        <option>Informal</option>
+                        <option>Persuasive</option>
+                        <option>Humorous</option>
+                        <option>Serious</option>
+                        <option>Friendly</option>
                     </select>
                 </div>
 
@@ -39,10 +39,10 @@
                     <label for="aoe">Add-On Emotion</label>
                     <select class="form-control" id="aoe">
                         <option>Concern</option>
-						<option>Empathy</option>
-						<option>Compassion</option>
-						<option>Worry</option>
-						<option>Anxiety</option>
+                        <option>Empathy</option>
+                        <option>Compassion</option>
+                        <option>Worry</option>
+                        <option>Anxiety</option>
                     </select>
                 </div>
 
@@ -77,64 +77,69 @@
 </div>
 
 
-
 <script>
-    
-jQuery(document).ready(function() {
 
+    jQuery(document).ready(function () {
 
-    jQuery('#letter-content').summernote({
-        placeholder: `Select a template or write a prompt to get started. Or start typing here...`,
-        tabsize: 2,
-        height: jQuery('.content').height()
-    });
+        const storedTemplateContent = localStorage.getItem('templateContent');
+        if (storedTemplateContent) {
+            const decodedTemplateContent = decodeURIComponent(storedTemplateContent);
+            jQuery('#cc').val(decodedTemplateContent);
+            localStorage.removeItem('templateContent');
+        }
 
-    jQuery('#bttn-generate').click(function() {
-
-        const letter = document.querySelector('.content .note-editor .note-editable p');
-        const wnym = document.querySelector('#woym');
-        const cyt = document.querySelector('#cyt');
-        const cc = document.querySelector('#cc');
-        const aoe = document.querySelector('#aoe');
-        const pt = document.querySelector('#pt');
-        const pgas = document.querySelector('#pgas');
-
-        const params = new URLSearchParams({
-          letter: letter.value,
-          wnym: wnym.value,
-          cyt: cyt.value,
-          cc: cc.value,
-          aoe: aoe.value,
-          pt: pt.value,
-          pgas: pgas.value,
+        jQuery('#letter-content').summernote({
+            placeholder: `Select a template or write a prompt to get started. Or start typing here...`,
+            tabsize: 2,
+            height: jQuery('.content').height()
         });
-        
-        jQuery('.content .note-editor .note-placeholder').hide();
 
-        // use SSE to get server Events
-        var source = new SSE("<?php echo plugin_dir_url( __DIR__ ); ?>ai-request-stream.php?" + params.toString());
-        source.addEventListener('message', function (e) {
-            if(e.data){
-                if(e.data != '[DONE]') {
+        jQuery('#bttn-generate').click(function () {
 
-                    dataObj = JSON.parse(e.data);
-                    
-                    if(dataObj['choices'] && dataObj['choices'][0]['delta']['content']) {
-                        var content = dataObj['choices'][0]['delta']['content'];
-                        content = content.replace(/\n/g, "<br>");
-                        letter.innerHTML += content;
+            const letter = document.querySelector('.content .note-editor .note-editable p');
+            const wnym = document.querySelector('#woym');
+            const cyt = document.querySelector('#cyt');
+            const cc = document.querySelector('#cc');
+            const aoe = document.querySelector('#aoe');
+            const pt = document.querySelector('#pt');
+            const pgas = document.querySelector('#pgas');
+
+            const params = new URLSearchParams({
+                letter: letter.value,
+                wnym: wnym.value,
+                cyt: cyt.value,
+                cc: cc.value,
+                aoe: aoe.value,
+                pt: pt.value,
+                pgas: pgas.value,
+            });
+
+            jQuery('.content .note-editor .note-placeholder').hide();
+
+            // use SSE to get server Events
+            var source = new SSE("<?php echo plugin_dir_url( __DIR__ ); ?>ai-request-stream.php?" + params.toString());
+            source.addEventListener('message', function (e) {
+                if (e.data) {
+                    if (e.data != '[DONE]') {
+
+                        dataObj = JSON.parse(e.data);
+
+                        if (dataObj['choices'] && dataObj['choices'][0]['delta']['content']) {
+                            var content = dataObj['choices'][0]['delta']['content'];
+                            content = content.replace(/\n/g, "<br>");
+                            letter.innerHTML += content;
+                        }
+
+                    } else {
+                        console.log('Completed');
                     }
-
-                } else {
-                    console.log('Completed');
                 }
-            }
-        })
-        source.stream()
+            })
+            source.stream()
+
+        });
 
     });
-
-});
 
 
 </script>
