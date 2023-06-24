@@ -64,35 +64,65 @@
         </div>
     </div>
 
+
     <div class="generated-image-section">
         <div class="content">
             <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <div class="image-box">
-                        <div class="image">
-                            <img src="<?php echo plugin_dir_url( __DIR__ ); ?>/img/Rectangle 277.png" alt="">
-                        </div>
-                        <div class="buttons">
-                            <a href="">Download <i class='bx bx-download'></i></a>
-                            <p>Delivered on 12.06.2023 <i class='bx bx-calendar'></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                    <div class="image-box">
-                        <div class="image">
-                            <img src="<?php echo plugin_dir_url( __DIR__ ); ?>/img/Rectangle 277.png" alt="">
-                        </div>
-                        <div class="buttons">
-                            <a href="">Download <i class='bx bx-download'></i></a>
-                            <p>Delivered on 12.06.2023 <i class='bx bx-calendar'></i></p>
+				<?php
+				$current_user = wp_get_current_user();
+				$username     = $current_user->user_login;
 
-                        </div>
-                    </div>
-                </div>
+				$args = array(
+					'post_type'  => 'art_request',
+					'meta_query' => array(
+						array(
+							'key'     => 'username', // Replace 'username' with the actual meta field key
+							'value'   => $username,
+							'compare' => '='
+						)
+					)
+				);
+
+				$query = new WP_Query( $args );
+
+				if ( $query->have_posts() ) {
+					while ( $query->have_posts() ) {
+						$query->the_post();
+						// Get the gallery images
+						$art_images = get_field( 'art_images' );
+
+						if ( $art_images ) {
+							foreach ( $art_images as $image_id ) {
+								$image_url = wp_get_attachment_image_url( $image_id, 'large' ); // Adjust the image size as needed
+								$image_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+								?>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="image-box">
+                                        <div class="image">
+                                            <img src="<?php echo esc_url( $image_url ); ?>"
+                                                 alt="<?php echo esc_attr( $image_alt ); ?>">
+                                        </div>
+                                        <div class="buttons">
+                                            <a href="<?php echo esc_url( $image_url ); ?>" download>Download <i
+                                                        class='bx bx-download'></i></a>
+                                            <p>Delivered on <?php echo get_the_date( 'd.m.Y' ); ?> <i
+                                                        class='bx bx-calendar'></i></p>
+                                        </div>
+                                    </div>
+                                </div>
+								<?php
+							}
+						}
+					}
+					wp_reset_postdata();
+				} else {
+					// No matching posts found
+				}
+				?>
             </div>
         </div>
     </div>
+
 </div>
 
 <script>

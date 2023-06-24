@@ -64,7 +64,7 @@ function botterflyai_register_cpt() {
 		'label'               => 'Art Request',
 		'description'         => 'Custom post type for art requests',
 		'labels'              => $labels,
-		'supports'            => array( 'title' ),
+		'supports'            => array( 'title', 'comments' ),
 		'public'              => false,
 		'publicly_queryable'  => false,
 		'show_ui'             => true,
