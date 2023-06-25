@@ -14,10 +14,11 @@
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
 				$query->the_post();
+				$template_id    = get_the_ID();
 				?>
 
                 <div class="col-lg-3 col-md-4 col-sm-12 d-flex align-items-stretch">
-                    <div class="template__card">
+                    <a href="#" class="template__card" data-templateid="<?php echo $template_id; ?>">
                         <div class="template__card--img">
 							<?php
 							if ( has_post_thumbnail() ) {
@@ -45,10 +46,10 @@
 							?>
                         </div>
 
-                        <div class="template__card--desc--hiden" style="display: none">
+                        <div class="template__card--desc--hidden" style="display: none">
 							<?php the_content(); ?>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
 				<?php
@@ -66,9 +67,10 @@
 <script>
     jQuery(document).ready(function () {
         jQuery('.template__card').on('click', function () {
-            let templateContent = jQuery(this).find('.template__card--desc--hiden').text().trim();
-            localStorage.setItem('templateContent', templateContent);
-            window.location.href = 'http://botterflyai.local/app/letter/';
+            var templateid = jQuery(this).data('templateid');
+            var url = '<?php echo home_url(); ?>/app/letter/?templateid=' + encodeURIComponent(templateid);
+
+            window.location.href = url;
         });
     });
 </script>

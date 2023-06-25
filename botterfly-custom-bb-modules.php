@@ -2,11 +2,7 @@
 /**
  * Plugin Name: BotterFly Custom Modules for Beaver Builder
  * Description: A plugin that adds extra modules to Beaver Builder.
- * <<<<<<< HEAD
- * Version: 1.3
- * =======
- * Version: 1.2
- * >>>>>>> 6b59724ec650233050a78c1fd30abd2433afb0e5
+ * Version: 2.0
  * Author: Online With You & MD Arif Islam
  */
 
@@ -72,12 +68,12 @@ function botterflyai_register_cpt() {
 		"rest_base"           => "",
 		'has_archive'         => false,
 		'show_in_menu'        => true,
-		'menu_position'       => 5,
 		'show_in_admin_bar'   => true,
 		'show_in_nav_menus'   => true,
 		'can_export'          => true,
 		'exclude_from_search' => true,
 		'capability_type'     => 'post',
+		"menu_icon"           => "dashicons-category",
 		'rewrite'             => array( 'slug' => 'art-request' ),
 		'hierarchical'        => false,
 	);
@@ -123,6 +119,60 @@ function botterflyai_register_cpt() {
 
 	register_post_type( "template", $args );
 
+	$labels = array(
+		'name'                  => 'Letters',
+		'singular_name'         => 'Letter',
+		'menu_name'             => 'Letters',
+		'name_admin_bar'        => 'Letter',
+		'archives'              => 'Letter Archives',
+		'attributes'            => 'Letter Attributes',
+		'parent_item_colon'     => 'Parent Letter:',
+		'all_items'             => 'All Letters',
+		'add_new_item'          => 'Add New Letter',
+		'add_new'               => 'Add New',
+		'new_item'              => 'New Letter',
+		'edit_item'             => 'Edit Letter',
+		'update_item'           => 'Update Letter',
+		'view_item'             => 'View Letter',
+		'view_items'            => 'View Letters',
+		'search_items'          => 'Search Letters',
+		'not_found'             => 'No Letters found',
+		'not_found_in_trash'    => 'No Letters found in Trash',
+		'featured_image'        => 'Featured Image',
+		'set_featured_image'    => 'Set featured image',
+		'remove_featured_image' => 'Remove featured image',
+		'use_featured_image'    => 'Use as featured image',
+		'insert_into_item'      => 'Insert into Letter',
+		'uploaded_to_this_item' => 'Uploaded to this Letter',
+		'items_list'            => 'Letters list',
+		'items_list_navigation' => 'Letters list navigation',
+		'filter_items_list'     => 'Filter Letters list',
+	);
+
+	$args = array(
+		'label'               => 'Letter',
+		'description'         => 'Custom post type for letters',
+		'labels'              => $labels,
+		'supports'            => array( 'title', 'editor' ),
+		'public'              => false,
+		'publicly_queryable'  => false,
+		'show_ui'             => true,
+		'show_in_rest'        => false,
+		"rest_base"           => "",
+		'has_archive'         => false,
+		'show_in_menu'        => true,
+		'show_in_admin_bar'   => true,
+		'show_in_nav_menus'   => true,
+		'can_export'          => true,
+		'exclude_from_search' => true,
+		"menu_icon"           => "dashicons-category",
+		'capability_type'     => 'post',
+		'rewrite'             => array( 'slug' => 'art-request' ),
+		'hierarchical'        => false,
+	);
+
+	register_post_type( 'letters', $args );
+
 
 }
 
@@ -130,12 +180,19 @@ add_action( 'init', 'botterflyai_register_cpt' );
 
 function botterflyai_change_menu( $menu ) {
 	$art_req_count = get_transient( 'art_req_count' ) ? get_transient( 'art_req_count' ) : 0;
+	$letters_count = get_transient( 'letters_count' ) ? get_transient( 'letters_count' ) : 0;
 
 	if ( $art_req_count > 0 ) {
 		$menu_index = array_search( 'edit.php?post_type=art_request', array_column( $menu, 2 ) );
 
 		if ( $menu_index !== false ) {
 			$menu[ $menu_index ][0] = "Art Requests <span class='awaiting-mod'>{$art_req_count}</span>";
+		}
+	} elseif ( $letters_count > 0 ) {
+		$menu_index = array_search( 'edit.php?post_type=letters', array_column( $menu, 2 ) );
+
+		if ( $menu_index !== false ) {
+			$menu[ $menu_index ][0] = "Letters <span class='awaiting-mod'>{$letters_count}</span>";
 		}
 	}
 
@@ -149,10 +206,33 @@ function botterflyai_admin_scripts( $screen ) {
 	$_screen = get_current_screen();
 	if ( 'edit.php' == $screen && 'art_request' == $_screen->post_type ) {
 		delete_transient( 'art_req_count' );
+	} elseif ( 'edit.php' == $screen && 'letters' == $_screen->post_type ) {
+		delete_transient( 'letters_count' );
 	}
 }
 
 add_action( 'admin_enqueue_scripts', 'botterflyai_admin_scripts' );
 
+
+
+function botterflyai_add_template( $templates ) {
+	$templates[plugin_dir_path( __FILE__ ) . '/page-template/ai-art.php'] = __( 'Page Template From Plugin', 'botterflyai' );
+	return $templates;
+}
+
+add_filter( 'theme_page_templates', 'botterflyai_add_template' );
+
+
+function botterflyai_redirect_template( $template ) {
+	$post = get_post();
+
+	if ( 'ai-art.php' === get_page_template_slug( $post->ID ) ) {
+		$template = plugin_dir_path( __FILE__ ) . '/page-template/ai-art.php';
+	}
+
+	return $template;
+}
+
+add_filter( 'template_include', 'botterflyai_redirect_template' );
 
 ?>

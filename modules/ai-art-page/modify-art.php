@@ -47,10 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	// Transient check
 	$art_req_count = get_transient('art_req_count') ? get_transient('art_req_count') : 0;
-	$post_id = wp_insert_post($art_req_arguments, $wp_error);
+	wp_insert_post($art_req_arguments, $wp_error);
 
 	if (!$wp_error) {
-		update_post_meta($post_id, 'username', $username);
 		$art_req_count++;
 		set_transient('art_req_count', $art_req_count, 0);
 

@@ -48,7 +48,10 @@
                             </select>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="gs-btn" id="amf-btn">Modify Now</button>
+                            <button type="submit" class="gs-btn" id="amf-btn">
+                                Modify Now <i style="display: none" class="fa fa-spinner fa-spin loading-icon"></i>
+                            </button>
+
                         </div>
                     </form>
                 </div>
@@ -91,7 +94,7 @@
                             <small>Maximum 80 words</small>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="gs-btn" id="generate-ai-content-btn">Generate AI Content
+                            <button type="submit" class="gs-btn" id="generate-ai-content-btn">Generate AI Content <i style="display: none" class="fa fa-spinner fa-spin loading-icon"></i>
                             </button>
                         </div>
                     </form>
@@ -235,8 +238,11 @@
 
             jQuery.ajax({
                 type: 'POST',
-                url: 'http://botterflyai.local/wp-content/plugins/botterfly-custom-bb-modules-master/modules/ai-art-page/generate-ai-content.php',
+                url: '<?php echo plugin_dir_url( __DIR__ ); ?>generate-ai-content.php',
                 data: formData,
+                beforeSend: function () {
+                    jQuery(".loading-icon").show();
+                },
                 success: function (response) {
                     if (response == 'success') {
                         jQuery('#art-from').hide();
@@ -244,6 +250,12 @@
                     } else {
                         jQuery('#feedback-status').html('<p>Sorry, an error occurred while sending your feedback. Please try again later.</p>');
                     }
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                },
+                complete: function () {
+                    jQuery(".loading-icon").hide();
                 }
             });
         });
@@ -261,20 +273,30 @@
             formData.append("amfWad", amfWad);
             formData.append("amfNof", amfNof);
 
-            console.log(formData);
 
             // AJAX request to submit form data
             jQuery.ajax({
                 type: "POST",
-                url: "http://botterflyai.local/wp-content/plugins/botterfly-custom-bb-modules-master/modules/ai-art-page/modify-art.php",
+                url: "<?php echo plugin_dir_url( __DIR__ ); ?>modify-art.php",
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function () {
+                    jQuery(".loading-icon").show();
+                },
                 success: function (response) {
-                    console.log(response);
+                    if (response == 'success') {
+                        jQuery('#art-from').hide();
+                        jQuery('#feedback-status').html('<p>Your feedback was sent successfully. Thank you for getting in touch!</p>');
+                    } else {
+                        jQuery('#feedback-status').html('<p>Sorry, an error occurred while sending your feedback. Please try again later.</p>');
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.log(error);
+                },
+                complete: function () {
+                    jQuery(".loading-icon").hide();
                 }
             });
         });

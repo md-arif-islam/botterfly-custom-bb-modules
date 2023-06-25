@@ -1,3 +1,73 @@
+<?php
+$letter_id   = isset( $_GET['letterid'] ) ? intval( $_GET['letterid'] ) : 0;
+$template_id = isset( $_GET['templateid'] ) ? intval( $_GET['templateid'] ) : 0;
+
+if ( $letter_id > 0 ) {
+	$args = array(
+		'post_type' => 'letters',
+		'post__in'  => array( $letter_id )
+	);
+
+	$letter_posts = get_posts( $args );
+
+
+
+	if ( ! empty( $letter_posts ) ) {
+		$whats_on_your_mind              = get_post_meta( $letter_id, 'whats_on_your_mind', true );
+		$choose_your_tone                = get_post_meta( $letter_id, 'choose_your_tone', true );
+		$context_corner                  = get_post_meta( $letter_id, 'context_corner', true );
+		$add_on_emotion                  = get_post_meta( $letter_id, 'add_on_emotion', true );
+		$personal_touch                  = get_post_meta( $letter_id, 'personal_touch', true );
+		$personalized_greetings_signoffs = get_post_meta( $letter_id, 'personalized_greetings_signoffs', true );
+
+		$letter_post    = $letter_posts[0]; // Get the first post object
+		$letter_content = $letter_post->post_content;
+
+		?>
+        <script>
+            jQuery(document).ready(function () {
+
+                jQuery('#woym').val('<?php echo $whats_on_your_mind; ?>');
+                jQuery('#cyt').val('<?php echo $choose_your_tone; ?>');
+                jQuery('#cc').val('<?php echo $context_corner; ?>');
+                jQuery('#aoe').val('<?php echo $add_on_emotion; ?>');
+                jQuery('#pt').val('<?php echo $personal_touch; ?>');
+                jQuery('#pgas').val('<?php echo $personalized_greetings_signoffs; ?>');
+
+                jQuery("#letter-content").html('<?php echo $letter_content; ?>');
+
+            });
+        </script>
+		<?php
+
+	}
+
+} elseif ( $template_id > 0 ) {
+	$tem_args = array(
+		'post_type' => 'template',
+		'post__in'  => array( $template_id )
+	);
+
+	$template_posts = get_posts( $tem_args );
+
+	if ( ! empty( $template_posts ) ) {
+		$template_post    = $template_posts[0]; // Get the first post object
+		$template_content = $template_post->post_content;
+		?>
+
+        <script>
+
+            jQuery(document).ready(function () {
+                jQuery('#cc').val(`<?php echo $template_content; ?>`);
+            });
+        </script>
+
+
+		<?php
+	}
+}
+?>
+
 <div id="d-leter-generation">
     <div class="p-leter-generation">
         <div class="content">
@@ -61,8 +131,10 @@
                 </div>
 
                 <div class="text-center">
-                    <button type="button" class="gs-btn" id="bttn-generate">Generate AI Content</button>
+                    <button type="button" class="gs-btn" id="bttn-generate">Generate AI Content <i style="display: none" class="fa fa-spinner fa-spin loading-icon"></i></button>
                 </div>
+
+
 
             </form>
         </div>
@@ -81,12 +153,6 @@
 
     jQuery(document).ready(function () {
 
-        const storedTemplateContent = localStorage.getItem('templateContent');
-        if (storedTemplateContent) {
-            const decodedTemplateContent = decodeURIComponent(storedTemplateContent);
-            jQuery('#cc').val(decodedTemplateContent);
-            localStorage.removeItem('templateContent');
-        }
 
         jQuery('#letter-content').summernote({
             placeholder: `Select a template or write a prompt to get started. Or start typing here...`,
@@ -114,28 +180,54 @@
                 pgas: pgas.value,
             });
 
-            jQuery('.content .note-editor .note-placeholder').hide();
+            letter.innerHTML = "";
 
-            // use SSE to get server Events
-            var source = new SSE("<?php echo plugin_dir_url( __DIR__ ); ?>ai-request-stream.php?" + params.toString());
+            jQuery('.content .note-editor .note-placeholder').hide();
+            jQuery(".loading-icon").show();
+
+
+            let receivedData = ''; // letiable to store all the received data
+
+            let source = new SSE("<?php echo plugin_dir_url( __DIR__ ); ?>ai-request-stream.php?" + params.toString());
             source.addEventListener('message', function (e) {
                 if (e.data) {
                     if (e.data != '[DONE]') {
-
                         dataObj = JSON.parse(e.data);
-
                         if (dataObj['choices'] && dataObj['choices'][0]['delta']['content']) {
-                            var content = dataObj['choices'][0]['delta']['content'];
+                            let content = dataObj['choices'][0]['delta']['content'];
                             content = content.replace(/\n/g, "<br>");
+                            receivedData += content; // Append the content to the letiable
                             letter.innerHTML += content;
                         }
-
                     } else {
                         console.log('Completed');
+
+                        let paramsArray = {
+                            whats_on_your_mind: wnym.value,
+                            choose_your_tone: cyt.value,
+                            context_corner: cc.value,
+                            add_on_emotion: aoe.value,
+                            personal_touch: pt.value,
+                            personalized_greetings_signoffs: pgas.value,
+                            letter_content: receivedData,
+                        };
+
+                        jQuery.ajax({
+                            type: 'POST',
+                            url: '<?php echo plugin_dir_url( __DIR__ ); ?>letter-create-cpt.php',
+                            data: paramsArray,
+                            success: function (response) {
+                                console.log(response);
+                                jQuery(".loading-icon").hide();
+
+                            }
+                        });
+
                     }
                 }
-            })
-            source.stream()
+            });
+            source.stream();
+
 
         });
 
