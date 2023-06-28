@@ -5,26 +5,26 @@ require_once( $path . 'wp-load.php' );
 
 if ( $_SERVER["REQUEST_METHOD"] == "POST" ) {
 	// Get params
-	$whats_on_your_mind         = $_POST['whats_on_your_mind'];
-	$choose_your_tone          = $_POST['choose_your_tone'];
-	$context_corner           = $_POST['context_corner'];
-	$add_on_emotion          = $_POST['add_on_emotion'];
-	$personal_touch           = $_POST['personal_touch'];
-	$personalized_greetings_signoffs         = $_POST['personalized_greetings_signoffs'];
-	$letter_content = $_POST['letter_content'];
+	$whats_on_your_mind              = $_POST['whats_on_your_mind'];
+	$choose_your_tone                = $_POST['choose_your_tone'];
+	$context_corner                  = $_POST['context_corner'];
+	$add_on_emotion                  = $_POST['add_on_emotion'];
+	$personal_touch                  = $_POST['personal_touch'];
+	$personalized_greetings_signoffs = $_POST['personalized_greetings_signoffs'];
+	$letter_content                  = $_POST['letter_content'];
 
 	// Get the logged-in user's username
 	$current_user = wp_get_current_user();
 	$username     = $current_user->user_login;
 
 	$params = array(
-		'username' => $username,
-		'whats_on_your_mind'     => $whats_on_your_mind,
-		'choose_your_tone'      => $choose_your_tone,
-		'context_corner'       => $context_corner,
-		'add_on_emotion'      => $add_on_emotion,
-		'personal_touch'       => $personal_touch,
-		'personalized_greetings_signoffs'     => $personalized_greetings_signoffs,
+		'username'                        => $username,
+		'whats_on_your_mind'              => $whats_on_your_mind,
+		'choose_your_tone'                => $choose_your_tone,
+		'context_corner'                  => $context_corner,
+		'add_on_emotion'                  => $add_on_emotion,
+		'personal_touch'                  => $personal_touch,
+		'personalized_greetings_signoffs' => $personalized_greetings_signoffs,
 	);
 
 	// Query to count existing posts for the given username
@@ -64,7 +64,7 @@ if ( $_SERVER["REQUEST_METHOD"] == "POST" ) {
 	if ( ! $wp_error ) {
 		$letters_count ++;
 		set_transient( 'letters_count', $letters_count, 0 );
-		echo "sucontext_corneress";
+		echo "success";
 	}
 
 }

@@ -11,7 +11,6 @@ if ( $letter_id > 0 ) {
 	$letter_posts = get_posts( $args );
 
 
-
 	if ( ! empty( $letter_posts ) ) {
 		$whats_on_your_mind              = get_post_meta( $letter_id, 'whats_on_your_mind', true );
 		$choose_your_tone                = get_post_meta( $letter_id, 'choose_your_tone', true );
@@ -26,16 +25,7 @@ if ( $letter_id > 0 ) {
 		?>
         <script>
             jQuery(document).ready(function () {
-
-                jQuery('#woym').val('<?php echo $whats_on_your_mind; ?>');
-                jQuery('#cyt').val('<?php echo $choose_your_tone; ?>');
-                jQuery('#cc').val('<?php echo $context_corner; ?>');
-                jQuery('#aoe').val('<?php echo $add_on_emotion; ?>');
-                jQuery('#pt').val('<?php echo $personal_touch; ?>');
-                jQuery('#pgas').val('<?php echo $personalized_greetings_signoffs; ?>');
-
-                jQuery("#letter-content").html('<?php echo $letter_content; ?>');
-
+                jQuery("#letter-content").html(`<?php echo $letter_content;  ?>`);
             });
         </script>
 		<?php
@@ -53,17 +43,6 @@ if ( $letter_id > 0 ) {
 	if ( ! empty( $template_posts ) ) {
 		$template_post    = $template_posts[0]; // Get the first post object
 		$template_content = $template_post->post_content;
-		?>
-
-        <script>
-
-            jQuery(document).ready(function () {
-                jQuery('#cc').val(`<?php echo $template_content; ?>`);
-            });
-        </script>
-
-
-		<?php
 	}
 }
 ?>
@@ -81,62 +60,86 @@ if ( $letter_id > 0 ) {
             <form class="form">
                 <!-- Form inputs -->
                 <div class="form-group">
-                    <label for="woum">What's On Your Mind?</label>
-                    <input type="text" class="form-control" id="woym" placeholder="Purpose of the letter">
+                    <label for="woym">What's On Your Mind?</label>
+                    <input type="text" class="form-control" id="woym" placeholder="Purpose of the letter"
+                           value="<?php echo isset( $whats_on_your_mind ) ? $whats_on_your_mind : ''; ?>">
                     <small>Maximum 80 words</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="cut">Choose Your Tone</label>
+                    <label for="cyt">Choose Your Tone</label>
                     <select class="form-control" id="cyt">
-                        <option>Formal</option>
-                        <option>Informal</option>
-                        <option>Persuasive</option>
-                        <option>Humorous</option>
-                        <option>Serious</option>
-                        <option>Friendly</option>
+                        <option <?php echo isset( $choose_your_tone ) && $choose_your_tone == 'Formal' ? 'selected' : ''; ?>>
+                            Formal
+                        </option>
+                        <option <?php echo isset( $choose_your_tone ) && $choose_your_tone == 'Informal' ? 'selected' : ''; ?>>
+                            Informal
+                        </option>
+                        <option <?php echo isset( $choose_your_tone ) && $choose_your_tone == 'Persuasive' ? 'selected' : ''; ?>>
+                            Persuasive
+                        </option>
+                        <option <?php echo isset( $choose_your_tone ) && $choose_your_tone == 'Humorous' ? 'selected' : ''; ?>>
+                            Humorous
+                        </option>
+                        <option <?php echo isset( $choose_your_tone ) && $choose_your_tone == 'Serious' ? 'selected' : ''; ?>>
+                            Serious
+                        </option>
+                        <option <?php echo isset( $choose_your_tone ) && $choose_your_tone == 'Friendly' ? 'selected' : ''; ?>>
+                            Friendly
+                        </option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="cc">Context Corner</label>
                     <textarea class="form-control" id="cc" rows="3"
-                              placeholder="Enter key points and words you want to be included"></textarea>
+                              placeholder="Enter key points and words you want to be included"><?php echo isset( $context_corner ) ? $context_corner : ( isset( $template_content ) ? $template_content : '' ); ?>
+</textarea>
                     <small>Maximum 80 words</small>
                 </div>
 
                 <div class="form-group">
                     <label for="aoe">Add-On Emotion</label>
                     <select class="form-control" id="aoe">
-                        <option>Concern</option>
-                        <option>Empathy</option>
-                        <option>Compassion</option>
-                        <option>Worry</option>
-                        <option>Anxiety</option>
+                        <option <?php echo isset( $add_on_emotion ) && $add_on_emotion == 'Concern' ? 'selected' : ''; ?>>
+                            Concern
+                        </option>
+                        <option <?php echo isset( $add_on_emotion ) && $add_on_emotion == 'Empathy' ? 'selected' : ''; ?>>
+                            Empathy
+                        </option>
+                        <option <?php echo isset( $add_on_emotion ) && $add_on_emotion == 'Compassion' ? 'selected' : ''; ?>>
+                            Compassion
+                        </option>
+                        <option <?php echo isset( $add_on_emotion ) && $add_on_emotion == 'Worry' ? 'selected' : ''; ?>>
+                            Worry
+                        </option>
+                        <option <?php echo isset( $add_on_emotion ) && $add_on_emotion == 'Anxiety' ? 'selected' : ''; ?>>
+                            Anxiety
+                        </option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="cc">Personal Touch</label>
+                    <label for="pt">Personal Touch</label>
                     <textarea class="form-control" id="pt" rows="3"
-                              placeholder="Please include specific phrases, idioms, or words that you or the recipient frequently use to make the letter more personal."></textarea>
+                              placeholder="Please include specific phrases, idioms, or words that you or the recipient frequently use to make the letter more personal."><?php echo isset( $personal_touch ) ? $personal_touch : ''; ?></textarea>
                     <small>Maximum 80 words</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="cc">Personalized Greetings and Signoffs</label>
+                    <label for="pgas">Personalized Greetings and Signoffs</label>
                     <textarea class="form-control" id="pgas" rows="3"
-                              placeholder="Add personalized based on the recipient's name and relationship with the sender."></textarea>
+                              placeholder="Add personalized based on the recipient's name and relationship with the sender."><?php echo isset( $personalized_greetings_signoffs ) ? $personalized_greetings_signoffs : ''; ?></textarea>
                     <small>Maximum 80 words</small>
                 </div>
 
                 <div class="text-center">
-                    <button type="button" class="gs-btn" id="bttn-generate">Generate AI Content <i style="display: none" class="fa fa-spinner fa-spin loading-icon"></i></button>
+                    <button type="button" class="gs-btn" id="bttn-generate">Generate AI Content <i style="display: none"
+                                                                                                   class="fa fa-spinner fa-spin loading-icon"></i>
+                    </button>
                 </div>
-
-
-
             </form>
+
         </div>
     </div>
 
@@ -161,54 +164,56 @@ if ( $letter_id > 0 ) {
         });
 
         jQuery('#bttn-generate').click(function () {
+            const letter = jQuery('.content .note-editor .note-editable');
+            const letterContent = jQuery("#letter-content");
+            const initialContent = letterContent.html(); // Store the initial content
 
-            const letter = document.querySelector('.content .note-editor .note-editable p');
-            const wnym = document.querySelector('#woym');
-            const cyt = document.querySelector('#cyt');
-            const cc = document.querySelector('#cc');
-            const aoe = document.querySelector('#aoe');
-            const pt = document.querySelector('#pt');
-            const pgas = document.querySelector('#pgas');
+            const wnym = jQuery('#woym');
+            const cyt = jQuery('#cyt');
+            const cc = jQuery('#cc');
+            const aoe = jQuery('#aoe');
+            const pt = jQuery('#pt');
+            const pgas = jQuery('#pgas');
 
             const params = new URLSearchParams({
-                letter: letter.value,
-                wnym: wnym.value,
-                cyt: cyt.value,
-                cc: cc.value,
-                aoe: aoe.value,
-                pt: pt.value,
-                pgas: pgas.value,
+                wnym: wnym.val(),
+                cyt: cyt.val(),
+                cc: cc.val(),
+                aoe: aoe.val(),
+                pt: pt.val(),
+                pgas: pgas.val(),
             });
 
-            letter.innerHTML = "";
+
+            letter.html("");
+            letterContent.html(initialContent); // Restore the initial content
 
             jQuery('.content .note-editor .note-placeholder').hide();
             jQuery(".loading-icon").show();
 
-
-            let receivedData = ''; // letiable to store all the received data
+            let receivedData = '';
 
             let source = new SSE("<?php echo plugin_dir_url( __DIR__ ); ?>ai-request-stream.php?" + params.toString());
             source.addEventListener('message', function (e) {
                 if (e.data) {
                     if (e.data != '[DONE]') {
-                        dataObj = JSON.parse(e.data);
+                        let dataObj = JSON.parse(e.data);
                         if (dataObj['choices'] && dataObj['choices'][0]['delta']['content']) {
                             let content = dataObj['choices'][0]['delta']['content'];
                             content = content.replace(/\n/g, "<br>");
-                            receivedData += content; // Append the content to the letiable
-                            letter.innerHTML += content;
+                            receivedData += content;
+                            letter.append(content);
                         }
                     } else {
                         console.log('Completed');
 
                         let paramsArray = {
-                            whats_on_your_mind: wnym.value,
-                            choose_your_tone: cyt.value,
-                            context_corner: cc.value,
-                            add_on_emotion: aoe.value,
-                            personal_touch: pt.value,
-                            personalized_greetings_signoffs: pgas.value,
+                            whats_on_your_mind: wnym.val(),
+                            choose_your_tone: cyt.val(),
+                            context_corner: cc.val(),
+                            add_on_emotion: aoe.val(),
+                            personal_touch: pt.val(),
+                            personalized_greetings_signoffs: pgas.val(),
                             letter_content: receivedData,
                         };
 
@@ -219,16 +224,12 @@ if ( $letter_id > 0 ) {
                             success: function (response) {
                                 console.log(response);
                                 jQuery(".loading-icon").hide();
-
                             }
                         });
-
                     }
                 }
             });
             source.stream();
-
-
         });
 
     });
